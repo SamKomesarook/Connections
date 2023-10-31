@@ -1,7 +1,8 @@
 "use client";
 import styles from "./page.module.css";
 import { useState } from "react";
-
+import Lottie from "lottie-react";
+import celebrateAnimation from "../../public/CelebrateAnimation.json";
 export default function Home() {
   const dataInit = [
     {
@@ -64,7 +65,6 @@ export default function Home() {
   const [mistakeAnim, setMistakeAnim] = useState(false);
   const [selected, setSelected] = useState<Array<string>>([]);
   const [remaining, setRemaining] = useState(shuffle(vals));
-  const [solved, setSolved] = useState<Array<string>>([]);
 
   const renderTries = () => {
     let newMistakes = [];
@@ -76,6 +76,18 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      {data.find((elem) => elem.solved) && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}
+        >
+          <Lottie animationData={celebrateAnimation} loop={true} />
+        </div>
+      )}
       <div>Create four groups of four!</div>
       <div
         style={{
@@ -83,7 +95,8 @@ export default function Home() {
           gridTemplateRows: "repeat(4, 1fr)",
           gridTemplateColumns: "repeat(4, 1fr)",
           gap: "0.5rem",
-          minHeight: "70cqh",
+          height: "65cqh",
+          aspectRatio: "1/1",
         }}
       >
         {data
@@ -104,14 +117,26 @@ export default function Home() {
                   justifyContent: "center",
                   alignContent: "center",
                   alignItems: "center",
-                  fontSize: "1.6vh",
                   borderRadius: "20px",
+                  textAlign: "center",
                 }}
                 key={index.title}
               >
-                <div style={{ display: "flex", flexDirection: "column" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    fontSize: "5cqh",
+                  }}
+                >
                   <div>{index.title}</div>
-                  <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      fontSize: "2cqh",
+                      textAlign: "center",
+                    }}
+                  >
                     {index.elems.map((elem: string) => elem + " ")}
                   </div>
                 </div>
@@ -165,7 +190,6 @@ export default function Home() {
           gap: "1rem",
         }}
       >
-        <div className={`${styles.button} ${styles.buttonActive}`}>shuffle</div>
         <div
           onClick={() => setSelected([])}
           className={`${styles.button} ${styles.buttonActive}`}
@@ -178,7 +202,7 @@ export default function Home() {
           }`}
           style={{
             cursor: selected.length !== 4 ? "default" : "pointer",
-            border: selected.length !== 4 ? "none" : "",
+            border: selected.length !== 4 ? "2px solid transparent" : "",
           }}
           onClick={() => {
             if (selected.length !== 4) {
@@ -193,7 +217,6 @@ export default function Home() {
                 val.solved = true;
                 dataCopy.push(val);
                 setData(dataCopy);
-                setSolved(solved.concat(val.title));
                 setRemaining(
                   remaining.filter((elem) => !selected.includes(elem))
                 );
@@ -208,12 +231,14 @@ export default function Home() {
               setSelected([]);
               index = 0;
               setRemaining([]);
-              let newData = [];
-              for (let elem of data) {
+              for (var elem of [...data.filter((elem) => !elem.solved)]) {
+                let dataCopy = [
+                  ...data.filter((val) => val.title !== elem.title),
+                ];
                 elem.solved = true;
-                newData.push(elem);
+                dataCopy.push(elem);
+                setData(dataCopy);
               }
-              setData(newData);
             }
           }}
         >

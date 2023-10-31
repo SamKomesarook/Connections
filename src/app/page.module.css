@@ -4,7 +4,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   user-select: none;
 }
 
@@ -39,6 +40,18 @@
 
 .emphasizeAnim {
   animation: emphasize 0.5s 1 linear;
+}
+
+@media (width <= 500px) {
+  .tileContainer{
+    width: 100cqw;
+  }
+}
+
+@media (width > 500px) {
+  .tileContainer{
+    width: 30cqw;
+  }
 }
 
 @keyframes shake {
