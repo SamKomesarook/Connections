@@ -76,7 +76,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {data.find((elem) => elem.solved) && (
+      {data.every((elem) => elem.solved) && (
         <div
           style={{
             position: "absolute",
@@ -132,7 +132,6 @@ export default function Home() {
                   <div>{index.title}</div>
                   <div
                     style={{
-                      display: "flex",
                       fontSize: "2cqh",
                       textAlign: "center",
                     }}
